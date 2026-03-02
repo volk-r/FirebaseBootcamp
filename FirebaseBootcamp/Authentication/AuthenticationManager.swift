@@ -12,11 +12,13 @@ struct AuthDataResultModel {
 	let uid: String
 	let email: String?
 	let photoUrl: String?
+	let isAnonymous: Bool
 
 	init(user: User) {
 		self.uid = user.uid
 		self.email = user.email
 		self.photoUrl = user.photoURL?.description
+		self.isAnonymous = user.isAnonymous
 	}
 }
 
@@ -108,6 +110,36 @@ extension AuthenticationManager {
 
 	func signIn(credentials: AuthCredential) async throws -> AuthDataResultModel {
 		let authDataResult = try await Auth.auth().signIn(with: credentials)
+		return AuthDataResultModel(user: authDataResult.user)
+	}
+}
+
+// MARK: - SIGN IN ANONYMOUS
+
+extension AuthenticationManager {
+
+	@discardableResult
+	func signInAnonymous() async throws -> AuthDataResultModel {
+		let authDataResult = try await Auth.auth().signInAnonymously()
+		return AuthDataResultModel(user: authDataResult.user)
+	}
+
+	func linkEmail(email: String, password: String) async throws -> AuthDataResultModel {
+		let credentials = EmailAuthProvider.credential(withEmail: email, password: password)
+		return try await linkCredential(credentials: credentials)
+	}
+
+	func linkGoogle(tokens: GoogleSignResultModel) async throws -> AuthDataResultModel {
+		let credentials = GoogleAuthProvider.credential(withIDToken: tokens.idToken, accessToken: tokens.accessToken)
+		return try await linkCredential(credentials: credentials)
+	}
+
+	private func linkCredential(credentials: AuthCredential) async throws -> AuthDataResultModel {
+		guard let user = Auth.auth().currentUser else {
+			throw URLError(.badURL)
+		}
+
+		let authDataResult = try await user.link(with: credentials)
 		return AuthDataResultModel(user: authDataResult.user)
 	}
 }
