@@ -27,6 +27,10 @@ final class SettingsViewModel {
 		try AuthenticationManager.shared.signOut()
 	}
 
+	func deleteAccount() async throws {
+		try await AuthenticationManager.shared.delete()
+	}
+
 	func resetPassword() async throws {
 		let authUser = try AuthenticationManager.shared.getAuthenticatedUser()
 		guard let email = authUser.email else {
@@ -75,6 +79,19 @@ struct SettingsView: View {
 					}
 				}
 			}
+
+			Button(role: .destructive, action: {
+				Task {
+					do {
+						try await viewModel.deleteAccount()
+						showSignInView = true
+					} catch {
+						print("Failed to delete account: \(error)")
+					}
+				}
+			}, label: {
+				Text("Delete account")
+			})
 
 			if viewModel.authProviders.contains(.email) {
 				emailSection
