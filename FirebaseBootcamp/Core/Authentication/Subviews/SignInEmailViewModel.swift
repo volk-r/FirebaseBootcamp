@@ -19,8 +19,9 @@ final class SignInEmailViewModel {
 			return
 		}
 
-		let authResults = try await AuthenticationManager.shared.createUser(email: email, password: password)
-		try await UserManager.shared.createNewUser(auth: authResults)
+		let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
+		let user = DBUser(auth: authDataResult)
+		try await UserManager.shared.createUser(user: user)
 	}
 
 	func signIn() async throws {

@@ -14,11 +14,13 @@ final class AuthenticationViewModel {
 		let helper = SignInGoogleHelper()
 		let tokens = try await helper.signIn()
 		let authDataResult = try await AuthenticationManager.shared.signInWithGoogle(tokens: tokens)
-		try await UserManager.shared.createNewUser(auth: authDataResult)
+		let user = DBUser(auth: authDataResult)
+		try await UserManager.shared.createUser(user: user)
 	}
 
 	func signInAnonymous() async throws {
 		let authDataResult = try await AuthenticationManager.shared.signInAnonymous()
-		try await UserManager.shared.createNewUser(auth: authDataResult)
+		let user = DBUser(auth: authDataResult)
+		try await UserManager.shared.createUser(user: user)
 	}
 }
