@@ -5,6 +5,7 @@
 //  Created by Roman Romanov on 18.03.2026.
 //
 
+import Combine
 import Foundation
 import FirebaseFirestore
 import FirebaseSharedSwift
@@ -104,6 +105,8 @@ final class UserManager {
 //		decoder.keyDecodingStrategy = .convertFromSnakeCase
 		return decoder
 	}()
+
+	private var userFavoriteProductsListener: ListenerRegistration?
 
 	func createUser(user: DBUser) async throws {
 //		try userDocument(userId: user.userId).setData(from: user, merge: false, encoder: encoder)
@@ -213,6 +216,62 @@ final class UserManager {
 
 	func getAllUserFavoriteProducts(userId: String) async throws -> [UserFavoriteProduct] {
 		try await userFavoriteProductCollection(userId: userId).getDocuments(as: UserFavoriteProduct.self)
+	}
+
+	func removeListenerForAllUserFavoriteProducts() {
+		userFavoriteProductsListener?.remove()
+	}
+
+	func addListenerForAllUserFavoriteProducts(
+		userId: String,
+		completion: @escaping (_ products: [UserFavoriteProduct]) -> Void
+	) {
+		userFavoriteProductsListener = userFavoriteProductCollection(userId: userId).addSnapshotListener { querySnapshot, error in
+			guard let documents = querySnapshot?.documents else {
+				print("No documents")
+				return
+			}
+
+			let products: [UserFavoriteProduct] = documents.compactMap { try? $0.data(as: UserFavoriteProduct.self) }
+			completion(products)
+
+			querySnapshot?.documentChanges.forEach { change in
+				switch change.type {
+				case .added:
+					print("New product: \(change.document.data())")
+				case .modified:
+					print("Modified product: \(change.document.data())")
+				case .removed:
+					print("Removed product: \(change.document.data())")
+				}
+			}
+		}
+	}
+
+//	func addListenerForAllUserFavoriteProducts(
+//		userId: String
+//	) -> AnyPublisher<[UserFavoriteProduct], Error> {
+//		let publisher = PassthroughSubject<[UserFavoriteProduct], Error>()
+//
+//		userFavoriteProductsListener = userFavoriteProductCollection(userId: userId).addSnapshotListener { querySnapshot, error in
+//			guard let documents = querySnapshot?.documents else {
+//				print("No documents")
+//				return
+//			}
+//
+//			let products: [UserFavoriteProduct] = documents.compactMap { try? $0.data(as: UserFavoriteProduct.self) }
+//			publisher.send(products)
+//		}
+//
+//		return publisher.eraseToAnyPublisher()
+//	}
+
+	func addListenerForAllUserFavoriteProducts(userId: String) -> AnyPublisher<[UserFavoriteProduct], Error> {
+		let (publisher, listener) = userFavoriteProductCollection(userId: userId)
+			.addSnapshotListener(as: UserFavoriteProduct.self)
+
+		userFavoriteProductsListener = listener
+		return publisher
 	}
 }
 
