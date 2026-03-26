@@ -10,6 +10,7 @@
 		3C01FCCE2F6ABB7F0078C5B0 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3C01FCCD2F6ABB7F0078C5B0 /* FirebaseFirestore */; };
 		3C01FD1F2F73C83E0078C5B0 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C01FD1E2F73C83E0078C5B0 /* FirebaseCrashlytics */; };
 		3C01FD252F75058E0078C5B0 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 3C01FD242F75058E0078C5B0 /* FirebasePerformance */; };
+		3C01FD302F7529030078C5B0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C01FD2F2F7529030078C5B0 /* AdSupport.framework */; };
 		3C568A542F111269007FB174 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C568A532F111269007FB174 /* FirebaseAnalytics */; };
 		3C568A572F12BDE4007FB174 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3C568A562F12BDE4007FB174 /* FirebaseAuth */; };
 		3C568A672F15114A007FB174 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 3C568A662F15114A007FB174 /* GoogleSignIn */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3C01FD2F2F7529030078C5B0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		3C568A3C2F1107F9007FB174 /* FirebaseBootcamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebaseBootcamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -47,6 +49,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C01FD252F75058E0078C5B0 /* FirebasePerformance in Frameworks */,
+				3C01FD302F7529030078C5B0 /* AdSupport.framework in Frameworks */,
 				3C568A542F111269007FB174 /* FirebaseAnalytics in Frameworks */,
 				3C568A572F12BDE4007FB174 /* FirebaseAuth in Frameworks */,
 				3C568A672F15114A007FB174 /* GoogleSignIn in Frameworks */,
@@ -79,6 +82,7 @@
 		3C568A552F12BDE4007FB174 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3C01FD2F2F7529030078C5B0 /* AdSupport.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
